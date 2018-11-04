@@ -1,6 +1,6 @@
-# vue2-leaflet-markercluster
+# vue2-leaflet-markercluster-pie
 
-This is a [markercluster plugin](https://github.com/Leaflet/Leaflet.markercluster) extension for [vue2-leaflet package](https://github.com/KoRiGaN/Vue2Leaflet)
+This is a [markercluster-pie plugin](https://github.com/Leaflet/Leaflet.markercluster) extension for [vue2-leaflet package](https://github.com/KoRiGaN/Vue2Leaflet)
 
 ## Install
 
