@@ -4,12 +4,12 @@ This is a [markercluster plugin](https://github.com/Leaflet/Leaflet.markercluste
 
 ## Install
 
-    npm install --save vue2-leaflet-markercluster
+    // todo: npm install --save vue2-leaflet-markercluster-pie
 
 ## Demo
 
-    git clone git@github.com:jperelli/vue2-leaflet-markercluster.git
-    cd vue2-leaflet-markercluster
+    git clone git@github.com:toshiroakio/vue2-leaflet-markercluster-pie.git
+    cd vue2-leaflet-markercluster-pie
     yarn
     yarn example
 
@@ -30,11 +30,11 @@ something like this
     <v-map :zoom=10 :center="initialLocation">
       <v-icondefault :image-path="'/statics/leafletImages/'"></v-icondefault>
       <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
-      <v-marker-cluster>
+      <v-marker-cluster-pie :key-func="keyFunc" :class-func="classFunc" :title-func="titleFunc">
         <v-marker v-for="c in cases" v-if="c.location !== null" :lat-lng="c.latlng">
           <v-popup :content="c.tooltipContent"></v-popup>
         </v-marker>
-      </v-marker-cluster>
+      </v-marker-cluster-pie>
     </v-map>
 
 ### on &lt;script&gt; add
@@ -52,6 +52,25 @@ In the same template file, at `<script>` part, this will make the component avai
         ...
       },
       ...
+      methods: {
+        keyFunc(d) {
+          return d.object[this.iconStyleField];
+        },
+        classFunc(d) {
+          return (
+            this.map_class + "__" + "cluster-marker-segment-color_" + d.data.key
+          );
+        },
+        titleFunc(d) {
+          return (
+            this.$spi.getObj("team_state", d.data.key).NAME +
+            " ( count: " +
+            d.data.values.length +
+            ")"
+          );
+        }
+      },
+      ...
     }
 
 #### option 2
@@ -59,29 +78,28 @@ In the same template file, at `<script>` part, this will make the component avai
 At main Vue configuration, this will make the component available to all templates in your app
 
     import Vue from 'vue'
-    import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster'
+    import Vue2LeafletMarkerClusterPie from 'vue2-leaflet-markercluster-pie'
     ...
-    Vue.component('v-marker-cluster', Vue2LeafletMarkerCluster)
+    Vue.component('v-marker-cluster-pie', Vue2LeafletMarkerClusterPie)
 
 ### on &lt;style&gt; add
 
-    @import "~leaflet.markercluster/dist/MarkerCluster.css";
-    @import "~leaflet.markercluster/dist/MarkerCluster.Default.css";
+    @import "~leaflet.markercluster/dist/MarkerClusterPie.css";
+    @import "~leaflet.markercluster/dist/MarkerClusterPie.Default.css";
 
 ## Access markercluster layer directly
 
 If you need to access other markecluster methods, like [refreshClusters()](https://github.com/Leaflet/Leaflet.markercluster#refreshing-the-clusters-icon), you can do it with a ref on the markercluster vue element and using the `mapObject` property
 
     ...
-    <v-marker-cluster ref="clusterRef">
+    <v-marker-cluster-pie ref="clusterRef">
       ...
-    </v-marker-cluster>
+    </v-marker-cluster-pie>
     ...
 
     ...
     this.$refs.clusterRef.mapObject.refreshClusters()
     ...
-
 
 ## Develop and build
 
@@ -94,8 +112,8 @@ If you need to access other markecluster methods, like [refreshClusters()](https
 
 ### Contributors
 
- - [Ahmet Özışık](https://github.com/aozisik)
- - [Nader Toukabri](https://nader.tech)
+- [Ahmet Özışık](https://github.com/aozisik)
+- [Nader Toukabri](https://nader.tech)
 
 ## License
 
