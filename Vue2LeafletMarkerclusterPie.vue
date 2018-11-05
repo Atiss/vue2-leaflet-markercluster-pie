@@ -27,6 +27,7 @@ function defineClusterIconProto(
   keyFunc,
   classFunc,
   titleFunc,
+  styleFunc,
   labelClass,
   icon_class
 ) {
@@ -50,6 +51,11 @@ function defineClusterIconProto(
         : function() {
             return "";
           }, //Title for each path
+      pathStyleFunc = options.pathStyleFunc
+        ? options.pathStyleFunc
+        : function() {
+            return "";
+          },
       pieClass = options.pieClass ? options.pieClass : "marker-cluster-pie", //Class for the whole pie
       pieLabel = options.pieLabel ? options.pieLabel : d3.sum(data, valueFunc), //Label for the whole pie
       pieLabelClass = options.pieLabelClass
@@ -69,12 +75,15 @@ function defineClusterIconProto(
     //Create an svg element
     let svg = document.createElementNS(d3.namespaces.svg, "svg");
     //Create the pie chart
+    // console.log(data);
     let vis = d3
       .select(svg)
       .data([data])
       .attr("class", pieClass)
       .attr("width", w)
       .attr("height", h);
+
+    // const segmentColor =
 
     let arcs = vis
       .selectAll("g.arc")
@@ -87,6 +96,7 @@ function defineClusterIconProto(
     arcs
       .append("svg:path")
       .attr("class", pathClassFunc)
+      .attr("style", pathStyleFunc)
       .attr("stroke-width", strokeWidth)
       .attr("d", arc)
       .append("svg:title")
@@ -127,7 +137,8 @@ function defineClusterIconProto(
       pieLabel: n,
       pieLabelClass: labelClass,
       pathClassFunc: classFunc,
-      pathTitleFunc: titleFunc
+      pathTitleFunc: titleFunc,
+      pathStyleFunc: styleFunc
     }),
     //Create a new divIcon and assign the svg markup to the html property
     myIcon = new L.DivIcon({
@@ -148,6 +159,10 @@ const props = {
     default: d => ""
   },
   titleFunc: {
+    type: Function,
+    default: d => ""
+  },
+  styleFunc: {
     type: Function,
     default: d => ""
   },
@@ -201,6 +216,7 @@ export default {
           context.keyFunc,
           context.classFunc,
           context.titleFunc,
+          context.styleFunc,
           "marker-cluster-pie-label",
           "marker-cluster"
         );

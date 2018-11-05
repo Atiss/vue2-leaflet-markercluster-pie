@@ -62,12 +62,7 @@ In the same template file, at `<script>` part, this will make the component avai
           );
         },
         titleFunc(d) {
-          return (
-            this.$spi.getObj("team_state", d.data.key).NAME +
-            " ( count: " +
-            d.data.values.length +
-            ")"
-          );
+          return { return `count: ${d.data.values.length}`};
         }
       },
       ...
