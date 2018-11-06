@@ -49,7 +49,7 @@ something like this
 
 In the same template file, at `<script>` part, this will make the component available only to the template in this file
 
-    import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster'
+    import Vue2LeafletMarkerclusterPie from 'vue2-leaflet-markercluster-pie'
     ...
     export default {
       ...
