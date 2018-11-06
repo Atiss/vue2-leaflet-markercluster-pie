@@ -11,7 +11,7 @@ import "leaflet.markercluster";
 import { findRealParent, propsBinder } from "vue2-leaflet";
 
 const d3 = require("d3");
-const rmax = 35; // максимальный радиус кластера
+// const rmax = 100; // max cluster radius
 
 function serializeXmlNode(xmlNode) {
   if (typeof window.XMLSerializer != "undefined") {
@@ -24,6 +24,7 @@ function serializeXmlNode(xmlNode) {
 
 function defineClusterIconProto(
   cluster,
+  rmax,
   keyFunc,
   classFunc,
   titleFunc,
@@ -41,21 +42,9 @@ function defineClusterIconProto(
       r = options.outerRadius ? options.outerRadius : 28, //Default outer radius = 28px
       rInner = options.innerRadius ? options.innerRadius : r - 10, //Default inner radius = r-10
       strokeWidth = options.strokeWidth ? options.strokeWidth : 1, //Default stroke is 1
-      pathClassFunc = options.pathClassFunc
-        ? options.pathClassFunc
-        : function() {
-            return "";
-          }, //Class for each path
-      pathTitleFunc = options.pathTitleFunc
-        ? options.pathTitleFunc
-        : function() {
-            return "";
-          }, //Title for each path
-      pathStyleFunc = options.pathStyleFunc
-        ? options.pathStyleFunc
-        : function() {
-            return "";
-          },
+      pathClassFunc = options.pathClassFunc ? options.pathClassFunc : () => "", //Class for each path
+      pathTitleFunc = options.pathTitleFunc ? options.pathTitleFunc : () => "", //Title for each path
+      pathStyleFunc = options.pathStyleFunc ? options.pathStyleFunc : () => "", //Style for cluster segment
       pieClass = options.pieClass ? options.pieClass : "marker-cluster-pie", //Class for the whole pie
       pieLabel = options.pieLabel ? options.pieLabel : d3.sum(data, valueFunc), //Label for the whole pie
       pieLabelClass = options.pieLabelClass
@@ -80,6 +69,10 @@ function defineClusterIconProto(
       .select(svg)
       .data([data])
       .attr("class", pieClass)
+      .attr(
+        "style",
+        `background-color: #FFF; border-radius: ${rmax}px !important;`
+      )
       .attr("width", w)
       .attr("height", h);
 
@@ -91,6 +84,7 @@ function defineClusterIconProto(
       .enter()
       .append("svg:g")
       .attr("class", "arc")
+      .attr("style", "fill-opacity: 0.5;")
       .attr("transform", "translate(" + origo + "," + origo + ")");
 
     arcs
@@ -107,6 +101,14 @@ function defineClusterIconProto(
       .attr("x", origo)
       .attr("y", origo)
       .attr("class", pieLabelClass)
+      .attr(
+        "style",
+        `
+          font-size: ${(rmax / 2.5) >> 0}px;
+          font-weight: bold; 
+          font-family: sans-serif;
+        `
+      )
       .attr("text-anchor", "middle")
       //.attr('dominant-baseline', 'central')
       /*IE doesn't seem to support dominant-baseline, but setting dy to .3em does the trick*/
@@ -114,7 +116,7 @@ function defineClusterIconProto(
       .text(pieLabel);
     //Return the svg-markup rather than the actual element
     return serializeXmlNode(svg);
-  } // для кластера
+  } // for cluster
   let children = cluster.getAllChildMarkers(),
     n = children.length, //Get number of markers in cluster
     strokeWidth = 1, //Set clusterpie stroke width
@@ -127,12 +129,10 @@ function defineClusterIconProto(
     //bake some svg markup
     html = bakeThePie({
       data: data,
-      valueFunc: function(d) {
-        return d.values.length;
-      },
+      valueFunc: d => d.values.length,
       strokeWidth: 1,
       outerRadius: r,
-      innerRadius: r - 10,
+      innerRadius: (r / 1.7) >> 0,
       pieClass: "cluster-pie",
       pieLabel: n,
       pieLabelClass: labelClass,
@@ -147,41 +147,37 @@ function defineClusterIconProto(
       iconSize: new L.Point(iconDim, iconDim)
     });
   return myIcon;
-} // для создания иконки кластера
+} // for cluster icon
 
 const props = {
   keyFunc: {
     type: Function,
+    custom: true,
     default: d => 0
   },
   classFunc: {
     type: Function,
+    custom: true,
     default: d => ""
   },
   titleFunc: {
     type: Function,
+    custom: true,
     default: d => ""
   },
   styleFunc: {
     type: Function,
+    custom: true,
     default: d => ""
+  },
+  rmax: {
+    type: Number,
+    custom: true,
+    default: 35
   },
   options: {
     type: Object,
-    default() {
-      return {
-        maxClusterRadius: 2 * rmax,
-        removeOutsideVisibleBounds: false,
-        singleMarkerMode: false
-        // animate: false
-        // chunkedLoading: true,
-        // spiderfyOnMaxZoom: false,
-        // disableClusteringAtZoom: 17
-        // spiderfyOnMaxZoom: false,
-        // showCoverageOnHover: false,
-        // zoomToBoundsOnClick: false
-      };
-    }
+    default: d => ({})
   }
 };
 
@@ -213,12 +209,13 @@ export default {
       return function(cluster) {
         return defineClusterIconProto(
           cluster,
+          context.rmax,
           context.keyFunc,
           context.classFunc,
           context.titleFunc,
           context.styleFunc,
           "marker-cluster-pie-label",
-          "marker-cluster"
+          "marker-cluster-pie-icon"
         );
       };
     },
@@ -236,29 +233,4 @@ export default {
 };
 </script>
 <style>
-.marker-cluster-pie g.arc {
-  fill-opacity: 0.5;
-}
-
-.marker-cluster-pie-label {
-  font-size: 14px;
-  font-weight: bold;
-  font-family: sans-serif;
-}
-
-.marker-cluster {
-  border-radius: 35px !important;
-  background-color: #fff;
-}
-
-.marker-cluster-call-pie-label {
-  font-size: 14px;
-  font-weight: bold;
-  font-family: serif;
-}
-
-.marker-cluster-call {
-  border-radius: 35px !important;
-  background-color: #efefef;
-}
 </style>
