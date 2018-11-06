@@ -30,11 +30,16 @@ something like this
     <v-map :zoom=10 :center="initialLocation">
       <v-icondefault :image-path="'/statics/leafletImages/'"></v-icondefault>
       <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
-      <v-marker-cluster-pie :key-func="keyFunc" :class-func="classFunc" :title-func="titleFunc">
-        <v-marker v-for="c in cases" v-if="c.location !== null" :lat-lng="c.latlng">
-          <v-popup :content="c.tooltipContent"></v-popup>
-        </v-marker>
-      </v-marker-cluster-pie>
+      <v-marker-cluster-pie
+        :key-func="keyFunc"
+        :class-func="classFunc"
+        :title-func="titleFunc"
+        :style-func="styleFunc"
+      >
+      <v-marker v-for="l in locations" :key="l.id" :lat-lng="l.latlng" :icon="icon" :options="{marker_data: l}">
+        <v-popup :content="l.text"></v-popup>
+      </v-marker>
+    </v-marker-cluster-pie>
     </v-map>
 
 ### on &lt;script&gt; add
@@ -54,15 +59,22 @@ In the same template file, at `<script>` part, this will make the component avai
       ...
       methods: {
         keyFunc(d) {
-          return d.object[this.iconStyleField];
+          return d.options.marker_data[this.iconStyleField];
         },
         classFunc(d) {
-          return (
-            this.map_class + "__" + "cluster-marker-segment-color_" + d.data.key
-          );
+          return "cluster-marker-segment-color_" + d.data.key;
         },
         titleFunc(d) {
-          return { return `count: ${d.data.values.length}`};
+          return `count: ${d.data.values.length}`;
+        },
+        styleFunc(d) {
+          const color = this.colorMap[d.data.key]; // see example
+          return `
+            fill: ${color};
+            stroke: #444;
+            background: ${color};
+            border-color: #444;
+          `;
         }
       },
       ...
