@@ -1,6 +1,6 @@
 # vue2-leaflet-markercluster-pie
 
-This is a [markercluster-pie plugin](https://github.com/Leaflet/Leaflet.markercluster) extension for [vue2-leaflet package](https://github.com/KoRiGaN/Vue2Leaflet)
+This is a [markercluster plugin](https://github.com/Leaflet/Leaflet.markercluster) extension for [vue2-leaflet package](https://github.com/KoRiGaN/Vue2Leaflet)
 
 ## Install
 
@@ -28,7 +28,7 @@ You can see the demo code in the file [example.vue](example.vue)
 something like this
 
     <v-map :zoom=10 :center="initialLocation">
-      <v-icondefault :image-path="'/statics/leafletImages/'"></v-icondefault>
+      <v-icondefault></v-icondefault>
       <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
       <v-marker-cluster-pie
         :key-func="keyFunc"
@@ -36,10 +36,11 @@ something like this
         :title-func="titleFunc"
         :style-func="styleFunc"
       >
-      <v-marker v-for="l in locations" :key="l.id" :lat-lng="l.latlng" :icon="icon" :options="{marker_data: l}">
-        <v-popup :content="l.text"></v-popup>
-      </v-marker>
-    </v-marker-cluster-pie>
+        <!-- require add data to marker -->
+        <v-marker v-for="l in locations" :key="l.id" :lat-lng="l.latlng" :icon="icon" :options="{marker_data: l}">
+          <v-popup :content="l.text"></v-popup>
+        </v-marker>
+      </v-marker-cluster-pie>
     </v-map>
 
 ### on &lt;script&gt; add
@@ -53,21 +54,22 @@ In the same template file, at `<script>` part, this will make the component avai
     export default {
       ...
       components: {
-        'v-marker-cluster': Vue2LeafletMarkerCluster
+        "v-marker-cluster-pie": Vue2LeafletMarkerclusterPie
         ...
       },
       ...
       methods: {
+        // function that returns the key by which the labels fall into the cluster segment
         keyFunc(d) {
           return d.options.marker_data[this.iconStyleField];
         },
-        classFunc(d) {
+        classFunc(d) { // custom class of cluster segment
           return "cluster-marker-segment-color_" + d.data.key;
         },
-        titleFunc(d) {
+        titleFunc(d) { // title of cluster segment
           return `count: ${d.data.values.length}`;
         },
-        styleFunc(d) {
+        styleFunc(d) { // style of cluster segment
           const color = this.colorMap[d.data.key]; // see example
           return `
             fill: ${color};
@@ -78,6 +80,24 @@ In the same template file, at `<script>` part, this will make the component avai
         }
       },
       ...
+       data() {
+         return {
+            iconStyleField: "style_field",
+            colorMap: {
+              "0": "black",
+              "1": "#F00000",
+              "2": "#FF0000",
+              "3": "#FFF000",
+              "4": "#FFFF00",
+              "5": "#FFFFF0",
+              "6": "#FFFFFF",
+              "7": "#0FFFFF",
+              "8": "#00FFFF",
+              "9": "#000FFF",
+              "10": "#0000FF"
+            }
+         }
+       }
     }
 
 #### option 2
@@ -115,12 +135,17 @@ If you need to access other markecluster methods, like [refreshClusters()](https
 
 ## Author
 
-[Julián Perelli](https://jperelli.com.ar/)
+[Julián Perelli](https://jperelli.com.ar/),
+
+## Fork maker
+
+[toshiroakio](https://github.com/toshiroakio)
 
 ### Contributors
 
 - [Ahmet Özışık](https://github.com/aozisik)
 - [Nader Toukabri](https://nader.tech)
+- [toshiroakio](https://github.com/toshiroakio)
 
 ## License
 

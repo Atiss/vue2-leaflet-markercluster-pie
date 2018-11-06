@@ -1,7 +1,7 @@
 {
   "name": "vue2-leaflet-markercluster-pie",
   "version": "2.0.0",
-  "description": "markercluster-pie plugin extension for vue2-leaflet package",
+  "description": "markercluster plugin extension for vue2-leaflet package",
   "main": "dist/Vue2LeafletMarkerclusterPie.js",
   "scripts": {
     "build": "vue build Vue2LeafletMarkerclusterPie.vue --prod --lib --config build.config.js",
@@ -20,7 +20,8 @@
   "author": "Julián Perelli (http://jperelli.com.ar/)",
   "contributors": [
     "Ahmet Özışık (https://github.com/aozisik)",
-    "Nader Toukabri (https://nader.tech)"
+    "Nader Toukabri (https://nader.tech)",
+    "toshiroakio (https: //github.com/toshiroakio)"
   ],
   "license": "MIT",
   "homepage": "https://github.com/toshiroakio/vue2-leaflet-markercluster-pie#readme",

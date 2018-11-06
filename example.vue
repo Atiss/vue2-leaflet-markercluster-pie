@@ -9,6 +9,7 @@
       :title-func="titleFunc" 
       :style-func="styleFunc"
       @clusterclick="click()">
+      <!-- require add data to marker -->
       <v-marker v-for="l in locations" :key="l.id" :lat-lng="l.latlng" :icon="icon" :options="{marker_data: l}">
         <v-popup :content="l.text"></v-popup>
       </v-marker>
