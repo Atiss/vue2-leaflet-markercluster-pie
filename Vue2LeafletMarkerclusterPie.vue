@@ -84,7 +84,6 @@ function defineClusterIconProto(
       .enter()
       .append("svg:g")
       .attr("class", "arc")
-      .attr("style", "fill-opacity: 0.5;")
       .attr("transform", "translate(" + origo + "," + origo + ")");
 
     arcs
