@@ -4,7 +4,7 @@ This is a [markercluster plugin](https://github.com/Leaflet/Leaflet.markercluste
 
 ## Install
 
-    // todo: npm install --save vue2-leaflet-markercluster-pie
+    npm install --save vue2-leaflet-markercluster-pie
 
 ## Demo
 
