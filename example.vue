@@ -8,6 +8,7 @@
       :class-func="classFunc" 
       :title-func="titleFunc" 
       :style-func="styleFunc"
+      :rmax="rmax"
       @clusterclick="click()">
       <!-- require add data to marker -->
       <v-marker v-for="l in locations" :key="l.id" :lat-lng="l.latlng" :icon="icon" :options="{marker_data: l}">
@@ -79,6 +80,7 @@ export default {
       })
     );
     return {
+      rmax: 35,
       iconStyleField: "style_field",
       locations,
       icon,
@@ -98,14 +100,6 @@ export default {
         "10": "#0000FF"
       }
     };
-  },
-  mounted() {
-    setTimeout(() => {
-      console.log("done");
-      this.$nextTick(() => {
-        this.clusterOptions = { disableClusteringAtZoom: 11 };
-      });
-    }, 5000);
   }
 };
 </script>
