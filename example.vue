@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import L from "leaflet";
+// import L from "leaflet";
 import * as Vue2Leaflet from "vue2-leaflet";
 import Vue2LeafletMarkerclusterPie from "./Vue2LeafletMarkerclusterPie";
 import iconUrl from "leaflet/dist/images/marker-icon.png";
@@ -69,12 +69,12 @@ export default {
       locations.push({
         id: i,
         style_field: (Math.random() * 10) >> 0,
-        latlng: L.latLng(rand(-34.9205), rand(-57.953646)),
+        latlng: Vue2Leaflet.L.latLng(rand(-34.9205), rand(-57.953646)),
         text: "Hola " + i
       });
     }
-    let icon = L.icon(
-      Object.assign({}, L.Icon.Default.prototype.options, {
+    let icon = Vue2Leaflet.L.icon(
+      Object.assign({}, Vue2Leaflet.L.Icon.Default.prototype.options, {
         iconUrl,
         shadowUrl
       })
@@ -85,7 +85,7 @@ export default {
       locations,
       icon,
       clusterOptions: {},
-      initialLocation: L.latLng(-34.9205, -57.953646),
+      initialLocation: Vue2Leaflet.L.latLng(-34.9205, -57.953646),
       colorMap: {
         "0": "black",
         "1": "#F00000",
